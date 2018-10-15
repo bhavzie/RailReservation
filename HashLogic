@@ -1,0 +1,57 @@
+trainid,tick
+
+
+120 = 1 2 3 4 5
+
+121 =  3
+
+
+linked list 
+
+4025 heads = trainno = csv file retrieve
+
+struct node
+{
+	int data;
+	node *next;
+}
+
+
+
+// book
+hash(trainnum) = tick
+pass trainno as head ->
+if(count==20)
+{
+	printerror
+}
+if(empty)
+add 1 as ticketno in new node 
+else
+hash[ size = 20 ] for tickno
+walk through the list and add to hashtable
+while(temp!=NULL)
+{
+	ht[temp->data]++;
+	temp = temp->next;
+}
+
+for(i=1 i<=20)
+{
+	if(i is not present in hashtable)
+	makenewnode for i
+	break;
+}
+
+
+
+
+// del
+hash(trainno,tick);	delete tick no from that trainno
+
+search(tickno in trainno)
+{
+	trainno as head
+	search for tickno and delete the node
+}
+

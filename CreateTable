@@ -1,0 +1,28 @@
+//in gui
+struct nodetrain
+{
+	int trainno
+	string name
+	string start 
+	string end
+}
+
+// in gui file create nodetrain vector
+nodetrain v[10000];
+for()
+v[i] = new nodetrain();
+
+v.open();
+
+filereader open(csv file,nodetrain v)
+{
+	str arr[] = getline()
+			
+
+	while(filereader)
+	{
+		
+		nodetrain.push_back(newnode(arr[1],arr[2],arr[3],arr[4]);
+	}
+}
+

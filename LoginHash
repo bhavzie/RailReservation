@@ -1,0 +1,22 @@
+
+hashtable[user] = password
+
+// add user
+adduser(username,pass)
+checking of username	// no spaces no ! no <
+check if username is present in hash or not
+if present perror
+else
+hash[user] = pass
+
+
+// verify login
+
+verify(username,pass)
+check if hash[user] == password
+if true
+enter
+else
+perror
+
+
