@@ -3,7 +3,7 @@ import java.awt.event.*;
 import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-//import org.jdesktop.swingx.JXDatePicker;
+import java.io.*;
 
 
 public class project extends JFrame implements ActionListener
@@ -36,10 +36,23 @@ public class project extends JFrame implements ActionListener
 	static JTextField jtffrom = new JTextField(15);
 	static JTextField jtfto = new JTextField(15);
 	static JLabel jlto = new JLabel("To :"); 
-	//static JXDatePicker picker = new JXDatePicker();
 	static JButton findtrains = new JButton("Find Trains");
 	static JButton checkstatus = new JButton("PNR STATUS");
+	static JLabel date = new JLabel("Date : dd/mm/yyyy");
+	static JTextField dateday = new JTextField();
+	static JTextField datemonth = new JTextField();
+	static JTextField dateyear = new JTextField();   
 	static GridLayout glmainpage = new GridLayout(4,2,5,5);
+	
+	static FileWriter fw;
+	static FileReader fr;
+	
+	public static boolean verify(String input)
+	{
+		if(input.isEmpty())
+		return false;
+		return true;
+	} 
 
 	public static void main(String args[])
 	{
@@ -73,11 +86,22 @@ public class project extends JFrame implements ActionListener
 		jtfto.setFont(new Font("Monaco",Font.BOLD,40));
 		findtrains.setFont(new Font("Monaco",Font.BOLD,40));
 		checkstatus.setFont(new Font("Monaco",Font.BOLD,40));
+		date.setFont(new Font("Monaco",Font.BOLD,40));
+		dateday.setFont(new Font("Monaco",Font.BOLD,40));
+		datemonth.setFont(new Font("Monaco",Font.BOLD,40));
+		dateyear.setFont(new Font("Monaco",Font.BOLD,40));
 		jfmain.setSize(1000,800);
-		//picker.setDate(Calendar.getInstance().getTime());
-		//picker.setFormats(new SimpleDateFormat("dd.MM.yyyy"));
 		jfmain.setLayout(glmainpage);
-
+		
+		try
+		{
+			fw = new FileWriter("Logincsv",true);
+			fr = new FileReader("Logincsv");
+		}catch(Exception emerald)
+		{
+		
+		}
+		
 		//Component added
 		//LoginPage
 		jflogin.add(jlusername);
@@ -102,9 +126,13 @@ public class project extends JFrame implements ActionListener
 		jfmain.add(jtffrom);
 		jfmain.add(jlto);
 		jfmain.add(jtfto);
-		//jfmain.add(picker);
-		jfmain.add(new JLabel());
-		jfmain.add(new JLabel());		
+		jfmain.add(date);
+		JPanel jptemp = new JPanel();
+		jptemp.setLayout(new GridLayout(1,3,5,5));
+		jptemp.add(dateday);
+		jptemp.add(datemonth);
+		jptemp.add(dateyear);
+		jfmain.add(jptemp);		
 		jfmain.add(findtrains);
 		jfmain.add(checkstatus);
 		
@@ -116,7 +144,42 @@ public class project extends JFrame implements ActionListener
 				//Database Check
 				String username = jtfusername.getText();
 				String password = jtfpassword.getText();
+				String app = new String(username);
+				app=app.concat(",");
+				app=app.concat(password); 	
 				// verify() username
+				try
+				{
+					BufferedReader br=new BufferedReader(new FileReader("Logincsv"));
+					String abc;
+					boolean flag=true;
+					while((abc=br.readLine())!=null)
+					{
+						if(abc.equals(app))
+						{
+							//System.out.println("SUCCESS");
+							jflogin.setVisible(false);
+							jfmain.setVisible(true);
+							flag=false;
+							break;		
+						}
+					}
+					if(flag)
+					{
+						JFrame jferror = new JFrame("Error");
+						JLabel jlinvaliduser = new JLabel("Invalid Username or Password");
+						jlinvaliduser.setFont(new Font("Monaco",Font.BOLD,40));
+						jferror.setSize(1000,300);
+						jferror.add(jlinvaliduser);
+						jferror.setVisible(true);
+						jtfusername.setText("");
+						jtfpassword.setText("");
+					}
+					
+				}
+				catch(Exception Le)
+				{
+				}
 				
 			}					
 		});
@@ -134,9 +197,38 @@ public class project extends JFrame implements ActionListener
 			{
 				// verify() username
 				// Add to Database
+				String usernameentered = jtfusernamesignup.getText();
+				String passwordentered = jtfpasswordsignup.getText();
 				
-				jfsignup.setVisible(false);
-				jfmain.setVisible(true);
+				if(verify(usernameentered) && verify(passwordentered))
+				{
+					try
+					{					
+						fw = new FileWriter("Logincsv",true);
+						fw.write(usernameentered+","+passwordentered);
+						fw.write('\n');
+						fw.close();
+						jfsignup.setVisible(false);
+						jfmain.setVisible(true);
+					}catch(Exception em)
+					{
+					}
+				}
+				else
+				{
+					JFrame jferror = new JFrame("Error");
+					JLabel jlinvaliduser = new JLabel("Invalid Username or Password");
+					jlinvaliduser.setFont(new Font("Monaco",Font.BOLD,40));
+					jferror.setSize(1000,300);
+					jferror.add(jlinvaliduser);
+					jferror.setVisible(true);
+					jtfusernamesignup.setText("");
+					jtfpasswordsignup.setText("");
+					jtfadhar.setText("");
+				}
+				
+				
+				
 			}
 		});
 
