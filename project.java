@@ -4,6 +4,20 @@ import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.io.*;
+import java.util.*;
+import java.util.List;
+import java.util.Collections;
+import java.awt.Desktop;
+
+
+/*
+	From to filtering
+	Database	
+	Show Avail in trainlist
+	Pnr
+	Cancel Res
+	
+*/
 
 
 public class project extends JFrame implements ActionListener
@@ -18,7 +32,8 @@ public class project extends JFrame implements ActionListener
 	static JButton signin = new JButton("Sign In");
 	static JButton signup = new JButton("Sign up");
 	static JButton exit1 = new JButton("Exit ");
-	static GridLayout glloginpage = new GridLayout(3,2,5,5);	
+	static JButton viewrules = new JButton("View Rules ");
+	static GridLayout glloginpage = new GridLayout(4,2,5,5);	
 
 	
 	//SignupPage
@@ -36,8 +51,8 @@ public class project extends JFrame implements ActionListener
 	//MainFrame
 	static JFrame jfmain = new JFrame("Main Page");
 	static JLabel jlfrom = new JLabel("From :");
-	static JTextField jtffrom = new JTextField(15);
-	static JTextField jtfto = new JTextField(15);
+	static JComboBox jcbfrom = new JComboBox();
+	static JComboBox jcbto = new JComboBox();
 	static JLabel jlto = new JLabel("To :"); 
 	static JButton findtrains = new JButton("Find Trains");
 	static JButton checkstatus = new JButton("PNR STATUS");
@@ -46,10 +61,25 @@ public class project extends JFrame implements ActionListener
 	static JTextField datemonth = new JTextField();
 	static JTextField dateyear = new JTextField();
 	static JButton exit3 = new JButton("Exit ");   
-	static GridLayout glmainpage = new GridLayout(4,2,5,5);
+	static GridLayout glmainpage = new GridLayout(6,2,5,5);
 	
 	//TrainList
 	static JFrame jftrainlist = new JFrame("Train List");
+	static JButton jbtrain[];
+	
+	//BookingPage
+	static JFrame jfbook = new JFrame("Book Ticket");
+	static JLabel jlpassname1 = new JLabel("Passenger Name :");
+	static JTextField jtfpassname1 = new JTextField();
+	static JLabel jlpassage = new JLabel("Age :");
+	static JTextField jtfagepass1 = new JTextField();
+	static JLabel jlpassgender = new JLabel("Gender :");
+	static JRadioButton jrbpass1a = new JRadioButton("A) Male");
+	static JRadioButton jrbpass1b = new JRadioButton("B) Female");
+	static JButton jbbookticket = new JButton("Book ");
+	static JButton jbbookexit = new JButton("Exit ");
+	static ButtonGroup jbgpass1 = new ButtonGroup();
+	
 	// trainid trainname from to book
 	// jscrollpane
 	
@@ -80,8 +110,8 @@ public class project extends JFrame implements ActionListener
 		
 		}
 		return true;
-	} 
-
+	}
+	
 	public static void main(String args[])
 	{
 		//Component adjustment
@@ -94,6 +124,8 @@ public class project extends JFrame implements ActionListener
 		jtfpassword.setFont(new Font("Monaco",Font.BOLD,40));	
 		exit1.setFont(new Font("Monaco",Font.BOLD,40));		
 		jflogin.setSize(1000,500);
+		jflogin.getRootPane().setDefaultButton(signin);
+		viewrules.setFont(new Font("Monaco",Font.BOLD,40));
 		jflogin.setLayout(glloginpage);
 
 		//SignupPage
@@ -106,14 +138,19 @@ public class project extends JFrame implements ActionListener
 		exit2.setFont(new Font("Monaco",Font.BOLD,40));
 		jlpasswordsignup.setFont(new Font("Monaco",Font.BOLD,40));
 		jfsignup.setSize(800,500);
+		jfsignup.getRootPane().setDefaultButton(register);
 		jfsignup.setLayout(glsignuppage);
 		
 		
 		//MainPage
 		jlfrom.setFont(new Font("Monaco",Font.BOLD,40));
 		jlto.setFont(new Font("Monaco",Font.BOLD,40));
-		jtffrom.setFont(new Font("Monaco",Font.BOLD,40));
-		jtfto.setFont(new Font("Monaco",Font.BOLD,40));
+		jcbfrom.setFont(new Font("Monaco",Font.BOLD,40));
+		jcbto.setFont(new Font("Monaco",Font.BOLD,40));
+		jcbfrom.setEditable(true);
+		jcbfrom.setEnabled(true);
+		jcbto.setEditable(true);
+		jcbto.setEnabled(true);
 		findtrains.setFont(new Font("Monaco",Font.BOLD,40));
 		checkstatus.setFont(new Font("Monaco",Font.BOLD,20));
 		date.setFont(new Font("Monaco",Font.BOLD,40));
@@ -125,13 +162,58 @@ public class project extends JFrame implements ActionListener
 		dateday.setText("" + c.get(Calendar.DAY_OF_MONTH));
 		datemonth.setText("" + (c.get(Calendar.MONTH)+1));
 		dateyear.setText("" + c.get(Calendar.YEAR));
-		jfmain.setSize(1000,800);
+		jfmain.getRootPane().setDefaultButton(findtrains);
+		jfmain.setSize(1500,1000);
 		jfmain.setLayout(glmainpage);
+		
+		//trainlist
+		jftrainlist.setSize(1500,1000);
+		jftrainlist.setLayout(new GridLayout(0,1,5,5));
+		
+		//bookingpage
+		jfbook.setSize(1500,1000);
+		jfbook.setLayout(new GridLayout(4,2,5,5));	
+		jlpassname1.setFont(new Font("Monaco",Font.BOLD,40));
+		jtfpassname1.setFont(new Font("Monaco",Font.BOLD,40));
+		jtfagepass1.setFont(new Font("Monaco",Font.BOLD,40));
+		jrbpass1a.setFont(new Font("Monaco",Font.BOLD,40));
+		jrbpass1b.setFont(new Font("Monaco",Font.BOLD,40));
+		jbbookticket.setFont(new Font("Monaco",Font.BOLD,40));
+		jlpassgender.setFont(new Font("Monaco",Font.BOLD,40));
+		jlpassage.setFont(new Font("Monaco",Font.BOLD,40));
+		jbgpass1.add(jrbpass1a);
+		jbgpass1.add(jrbpass1b);
+		jbbookexit.setFont(new Font("Monaco",Font.BOLD,40));
 		
 		try
 		{
-			fw = new FileWriter("Logincsv",true);
-			fr = new FileReader("Logincsv");
+			BufferedReader br = new BufferedReader(new FileReader("All_Indian_Trains.csv"));
+			String abc;
+			HashSet<String> h1 = new HashSet<String>();
+			HashSet<String> b1 = new HashSet<String>();
+			while((abc=br.readLine())!=null)
+			{
+				String dataarray[] = abc.split(",");
+				h1.add(dataarray[3]);
+				b1.add(dataarray[4]);
+				//jcbfrom.addItem(makeObj(dataarray[3]));
+				//jcbto.addItem(makeObj(dataarray[4]));				
+			}
+			List<String> sh1 = new ArrayList<String>(h1);
+			List<String> sb1 = new ArrayList<String>(b1);
+			Collections.sort(sh1);
+			Collections.sort(sb1);
+			Iterator<String> i = h1.iterator();
+			Iterator<String> j = b1.iterator();
+			for(int x=0;x < sh1.size();x++) 
+			{
+			    jcbfrom.addItem(sh1.get(x)); 
+			}
+			for(int x=0;x < sb1.size();x++) 
+			{
+			    jcbto.addItem(sb1.get(x)); 
+			}
+					
 		}catch(Exception emerald)
 		{
 		
@@ -144,11 +226,9 @@ public class project extends JFrame implements ActionListener
 		jflogin.add(jlpassword);
 		jflogin.add(jtfpassword);
 		jflogin.add(signin);
-		JPanel jpdish = new JPanel();
-		jpdish.setLayout(new GridLayout(1,2,5,5));
-		jpdish.add(exit1);
-		jpdish.add(signup);
-		jflogin.add(jpdish);
+		jflogin.add(signup);
+		jflogin.add(viewrules);
+		jflogin.add(exit1);
 		
 		//SignupPage
 		jfsignup.add(jlusernamesignup);
@@ -162,9 +242,13 @@ public class project extends JFrame implements ActionListener
 
 		//MainPage
 		jfmain.add(jlfrom);	
-		jfmain.add(jtffrom);
+		jfmain.add(jcbfrom);
+		jfmain.add(new JLabel());
+		jfmain.add(new JLabel());
 		jfmain.add(jlto);
-		jfmain.add(jtfto);
+		jfmain.add(jcbto);
+		jfmain.add(new JLabel());
+		jfmain.add(new JLabel());
 		jfmain.add(date);
 		JPanel jptemp = new JPanel();
 		jptemp.setLayout(new GridLayout(1,3,5,5));
@@ -178,7 +262,21 @@ public class project extends JFrame implements ActionListener
 		jpmag.add(checkstatus);
 		jpmag.add(exit3);
 		jfmain.add(jpmag);
+
 		
+		//BookingPage
+		jfbook.add(jlpassname1);
+		jfbook.add(jtfpassname1);
+		jfbook.add(jlpassage);
+		jfbook.add(jtfagepass1);
+		jfbook.add(jlpassgender);
+		JPanel jpnish = new JPanel();
+		jpnish.setLayout(new GridLayout(1,2,5,5));
+		jpnish.add(jrbpass1a);
+		jpnish.add(jrbpass1b);
+		jfbook.add(jpnish);
+		jfbook.add(jbbookticket);
+		jfbook.add(jbbookexit);
 
 		//ButtonEvents
 		signin.addActionListener(new ActionListener() {
@@ -278,7 +376,7 @@ public class project extends JFrame implements ActionListener
 				//pnr
 			}
 		});
-
+		
 		findtrains.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
@@ -286,10 +384,12 @@ public class project extends JFrame implements ActionListener
 				{
 					BufferedReader br=new BufferedReader(new FileReader("All_Indian_Trains.csv"));
 					String input;
+					int count = 0;
 					boolean flag=true;
-					String frominput = jtffrom.getText();
-					String toinput = jtfto.getText();
-					
+					String frominput = jcbfrom.getSelectedItem().toString();
+					String toinput = jcbto.getSelectedItem().toString();
+					Vector tempstring = new Vector();
+							
 					while((input=br.readLine())!=null)
 					{
 						String dataarray[] = input.split(",");
@@ -298,6 +398,8 @@ public class project extends JFrame implements ActionListener
 						{
 							
 							flag = false;
+							count++;
+							tempstring.add(dataarray[1]+"  "+dataarray[2]);
 						}	
 					}
 					if(flag)
@@ -312,12 +414,37 @@ public class project extends JFrame implements ActionListener
 						jtfpassword.setText("");
 					}
 					
+					if(!flag)
+					{
+						jbtrain = new JButton[count];
+						
+						for(int i=0; i<count; i++)
+						{
+							jbtrain[i] = new JButton(tempstring.get(i).toString());
+							jbtrain[i].setFont(new Font("Monaco",Font.BOLD,40));
+							jftrainlist.add(jbtrain[i]);
+						}
+						
+						for(int i=0; i<count; i++)
+						{
+							jbtrain[i].addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent e)
+							{
+								// hash logic
+								jfbook.setVisible(true);
+							}
+							});
+						}
+		
+		
+						jftrainlist.setVisible(true);	
+					}
 				}
 				catch(Exception Le)
 				{
 				}
-	
-			}
+				
+			}			
 		});
 		
 		exit1.addActionListener(new ActionListener() {
@@ -341,10 +468,55 @@ public class project extends JFrame implements ActionListener
 			}
 		});
 		
+		jbbookexit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				System.exit(0);
+			}
+		});
 		
+
+	
 		//display
 		jflogin.setVisible(true);			
 
+	
+	
+		viewrules.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				 try
+				 {
+
+					File pdfFile = new File("Rules & Regulations for the Agents.pdf");
+					if (pdfFile.exists())
+					{
+
+						if (Desktop.isDesktopSupported())
+						{
+							Desktop.getDesktop().open(pdfFile);
+						}
+						else
+						{
+							System.out.println("Awt Desktop is not supported!");
+						}
+					}
+					else 
+					{
+						System.out.println("File is not exists!");
+					}
+
+					System.out.println("Done");
+
+				  }
+				  catch (Exception ex)
+				  {
+					ex.printStackTrace();
+		  		  }
+		  	}
+		
+		});
+	
 	}
 	
 	public void actionPerformed(ActionEvent e)
