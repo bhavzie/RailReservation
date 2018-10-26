@@ -16,6 +16,7 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.PlainDocument;
+import java.sql.*;
 
 class JComboBoxAutoCompletador extends PlainDocument implements FocusListener, KeyListener, PropertyChangeListener
 {
@@ -261,6 +262,12 @@ public class project extends JFrame implements ActionListener
 	static JButton jbbookexit = new JButton("Exit ");
 	static ButtonGroup jbgpass1 = new ButtonGroup();
 	
+	//Pnr status
+	static JFrame jfpnr = new JFrame("Check PNR Status");
+	static JLabel jlpnr = new JLabel("Enter your PNR ");
+	static JTextField jtfpnr = new JTextField();
+	static JButton jbpnr = new JButton("Check Status");
+	
 	// trainid trainname from to book
 	// jscrollpane
 	
@@ -368,6 +375,15 @@ public class project extends JFrame implements ActionListener
 		jbgpass1.add(jrbpass1b);
 		jbbookexit.setFont(new Font("Monaco",Font.BOLD,40));
 		
+		//pnrStatus
+		jfpnr.setSize(1000,600);
+		jlpnr.setFont(new Font("Monaco",Font.BOLD,40));
+		jtfpnr.setFont(new Font("Monaco",Font.BOLD,40));
+		jbpnr.setFont(new Font("Monaco",Font.BOLD,40));
+		jfpnr.setLayout(new GridLayout(2,1,5,5));
+		
+		  
+		// jcb allIndia trains
 		try
 		{
 			BufferedReader br = new BufferedReader(new FileReader("All_Indian_Trains.csv"));
@@ -460,6 +476,34 @@ public class project extends JFrame implements ActionListener
 		jfbook.add(jpnish);
 		jfbook.add(jbbookticket);
 		jfbook.add(jbbookexit);
+		
+		//pnrstatus
+		JPanel jpdi = new JPanel();
+		jpdi.setLayout(new GridLayout(1,2,5,5));
+		jpdi.add(jlpnr);
+		jpdi.add(jtfpnr);
+		jfpnr.add(jpdi);
+		jfpnr.add(jbpnr);
+		
+		
+		HashMap<String, String> map = new HashMap<>();
+		//insert into hashmap also used in pnr
+		try
+		{
+		
+			BufferedReader br=new BufferedReader(new FileReader("bookt"));
+			String abc;
+			
+			while((abc=br.readLine())!=null)
+			{
+				String dataarray[] = abc.split(",");
+				map.put(dataarray[0],dataarray[1]);
+			}
+		}catch(Exception dishr)
+		{
+			
+		}
+		
 
 		//ButtonEvents
 		signin.addActionListener(new ActionListener() {
@@ -553,12 +597,81 @@ public class project extends JFrame implements ActionListener
 			}
 		});
 
+		
 		checkstatus.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
-				//pnr
+				jfpnr.setVisible(true);
 			}
 		});
+		
+		jbpnr.addActionListener(new ActionListener() {		// check for pnr
+			public void actionPerformed(ActionEvent e)
+			{
+				String input = jtfpnr.getText();
+				if(!map.containsKey(input))
+				{
+					JFrame jferror = new JFrame("Error");
+					JLabel jlinvaliduser = new JLabel("Invalid PNR ");
+					jlinvaliduser.setFont(new Font("Monaco",Font.BOLD,40));
+					jferror.setSize(1000,300);
+					jferror.add(jlinvaliduser);
+					jferror.setVisible(true);
+				}
+				else
+				{
+					String passengername = map.get(input);
+					String dateoftrain = input.substring(0,2) + "/" + input.substring(2,4) + "/20" + input.substring(4,6); 
+					String seatid = input.substring(6,8);
+					String trainid = input.substring(8);
+					String fromtrain;
+					String totrain;
+					String trainname;
+					
+					try
+					{
+						BufferedReader br=new BufferedReader(new FileReader("All_Indian_Trains.csv"));
+						String dishantj;
+							
+						while((dishantj=br.readLine())!=null)
+						{
+							String dataarray[] = input.split(",");
+							
+							if(dataarray[1].equals(trainid))
+							{
+								trainname = dataarray[2];
+								fromtrain = dataarray[3];
+								totrain = dataarray[4];
+								break;
+							}
+						}
+						
+					}catch(Exception dj)
+					{
+					
+					}
+					JFrame jfdisplayinfo = new JFrame("Display Information");
+					JLabel passdisplayname = new JLabel("Passenger name :");
+					JLabel passdisplayname1 = new JLabel(passengername);
+					JLabel trainiddisplay = new JLabel("Train ID");
+					JLabel trainiddisplay1 = new JLabel(trainid);
+					JLabel trainnamedisplay = new JLabel("Train Name");
+					JLabel trainnamedisplay1 = new JLabel(trainname);
+					JLabel dateoftraindisplay = new JLabel("Date of Journey");
+					JLabel dateoftraindisplay1 = new JLabel(dateoftrain);
+					JLabel seatiddisplay = new JLabel("Seat Number");
+					JLabel seatiddisplay1 = new JLabel(seatid);
+					JLabel fromdisplay = new JLabel("From");
+					JLabel todisplay = new JLabel("To");
+					JLabel fromdisplay1 = new JLabel(fromtrain);
+					JLabel todisplay1 = new JLabel(totrain);
+					// cancel button
+					
+					
+				}
+			}
+		});
+
 		
 		findtrains.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
@@ -663,7 +776,20 @@ public class project extends JFrame implements ActionListener
 		//display
 		jflogin.setVisible(true);			
 
-	
+		jbbookticket.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				try
+				{					
+						fw = new FileWriter("bookt",true);
+						fw.write("");
+						fw.write('\n');
+						fw.close();
+				}catch(Exception em)
+				{
+				}
+			}
+		});
 	
 		viewrules.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
