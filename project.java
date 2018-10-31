@@ -195,7 +195,7 @@ class JComboBoxAutoCompletador extends PlainDocument implements FocusListener, K
 }
 
 /*
-	Database	
+	Book
 	Show Avail in trainlist
 	Pnr
 	Cancel Res	
@@ -394,9 +394,7 @@ public class project extends JFrame implements ActionListener
 			{
 				String dataarray[] = abc.split(",");
 				h1.add(dataarray[3]);
-				b1.add(dataarray[4]);
-				//jcbfrom.addItem(makeObj(dataarray[3]));
-				//jcbto.addItem(makeObj(dataarray[4]));				
+				b1.add(dataarray[4]);				
 			}
 			List<String> sh1 = new ArrayList<String>(h1);
 			List<String> sb1 = new ArrayList<String>(b1);
@@ -504,6 +502,7 @@ public class project extends JFrame implements ActionListener
 			
 		}
 		
+		
 
 		//ButtonEvents
 		signin.addActionListener(new ActionListener() {
@@ -601,6 +600,7 @@ public class project extends JFrame implements ActionListener
 		checkstatus.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
+				jfmain.setVisible(false);
 				jfpnr.setVisible(true);
 			}
 		});
@@ -609,6 +609,7 @@ public class project extends JFrame implements ActionListener
 			public void actionPerformed(ActionEvent e)
 			{
 				String input = jtfpnr.getText();
+				
 				if(!map.containsKey(input))
 				{
 					JFrame jferror = new JFrame("Error");
@@ -621,12 +622,13 @@ public class project extends JFrame implements ActionListener
 				else
 				{
 					String passengername = map.get(input);
-					String dateoftrain = input.substring(0,2) + "/" + input.substring(2,4) + "/20" + input.substring(4,6); 
+					String dateoftrain = input.substring(0,2) + "/" + input.substring(2,4) + "/20";
+					dateoftrain = dateoftrain + input.substring(4,6); 
 					String seatid = input.substring(6,8);
 					String trainid = input.substring(8);
-					String fromtrain;
-					String totrain;
-					String trainname;
+					String fromtrain = "";
+					String totrain = "";
+					String trainname = "";
 					
 					try
 					{
@@ -635,7 +637,7 @@ public class project extends JFrame implements ActionListener
 							
 						while((dishantj=br.readLine())!=null)
 						{
-							String dataarray[] = input.split(",");
+							String dataarray[] = dishantj.split(",");
 							
 							if(dataarray[1].equals(trainid))
 							{
@@ -650,28 +652,171 @@ public class project extends JFrame implements ActionListener
 					{
 					
 					}
+					
 					JFrame jfdisplayinfo = new JFrame("Display Information");
 					JLabel passdisplayname = new JLabel("Passenger name :");
+					passdisplayname.setFont(new Font("Monaco",Font.BOLD,40));
 					JLabel passdisplayname1 = new JLabel(passengername);
+					passdisplayname1.setFont(new Font("Monaco",Font.BOLD,40));
 					JLabel trainiddisplay = new JLabel("Train ID");
+					trainiddisplay.setFont(new Font("Monaco",Font.BOLD,40));
 					JLabel trainiddisplay1 = new JLabel(trainid);
+					trainiddisplay1.setFont(new Font("Monaco",Font.BOLD,40));
 					JLabel trainnamedisplay = new JLabel("Train Name");
+					trainnamedisplay.setFont(new Font("Monaco",Font.BOLD,40));
 					JLabel trainnamedisplay1 = new JLabel(trainname);
+					trainnamedisplay1.setFont(new Font("Monaco",Font.BOLD,40));
 					JLabel dateoftraindisplay = new JLabel("Date of Journey");
+					dateoftraindisplay.setFont(new Font("Monaco",Font.BOLD,40));
 					JLabel dateoftraindisplay1 = new JLabel(dateoftrain);
+					dateoftraindisplay1.setFont(new Font("Monaco",Font.BOLD,40));
 					JLabel seatiddisplay = new JLabel("Seat Number");
+					seatiddisplay.setFont(new Font("Monaco",Font.BOLD,40));
 					JLabel seatiddisplay1 = new JLabel(seatid);
+					seatiddisplay1.setFont(new Font("Monaco",Font.BOLD,40));
 					JLabel fromdisplay = new JLabel("From");
+					fromdisplay.setFont(new Font("Monaco",Font.BOLD,40));
 					JLabel todisplay = new JLabel("To");
+					todisplay.setFont(new Font("Monaco",Font.BOLD,40));
 					JLabel fromdisplay1 = new JLabel(fromtrain);
+					fromdisplay1.setFont(new Font("Monaco",Font.BOLD,40));
 					JLabel todisplay1 = new JLabel(totrain);
+					todisplay1.setFont(new Font("Monaco",Font.BOLD,40));
+					JButton jbcanceldisplay = new JButton("Cancel");
+					jbcanceldisplay.setFont(new Font("Monaco",Font.BOLD,40));
+					JButton jbexitdisplay = new JButton("Exit");
+					jbexitdisplay.setFont(new Font("Monaco",Font.BOLD,40));
+					
+					jfdisplayinfo.setLayout(new GridLayout(0,2,5,5));
+					jfdisplayinfo.setSize(1500,1500);
+					jfdisplayinfo.add(passdisplayname);
+					jfdisplayinfo.add(passdisplayname1);
+					jfdisplayinfo.add(trainiddisplay);
+					jfdisplayinfo.add(trainiddisplay1);
+					jfdisplayinfo.add(trainnamedisplay);
+					jfdisplayinfo.add(trainnamedisplay1);
+					jfdisplayinfo.add(dateoftraindisplay);
+					jfdisplayinfo.add(dateoftraindisplay1);
+					jfdisplayinfo.add(seatiddisplay);
+					jfdisplayinfo.add(seatiddisplay1);
+					jfdisplayinfo.add(fromdisplay);
+					jfdisplayinfo.add(fromdisplay1);
+					jfdisplayinfo.add(todisplay);
+					jfdisplayinfo.add(todisplay1);
+					jfdisplayinfo.add(jbcanceldisplay);
+					jfdisplayinfo.add(jbexitdisplay);
+					
+					jbexitdisplay.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e)
+						{
+							System.exit(0);
+						}
+					});
+					
+					
+					jbcanceldisplay.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e)
+						{
+							String input5 = jtfpnr.getText();
+							String removedpassname = (String)map.remove(input);
+							
+							ArrayList<String> al = new ArrayList<String>(); 
+							
+							try
+							{
+								BufferedReader br=new BufferedReader(new FileReader("bookt"));
+								String input;
+								while((input=br.readLine())!=null)
+								{
+									String dataarray[] = input.split(",");
+						
+									if(!dataarray[0].equals(input5))
+									{
+										al.add(dataarray[0]+","+dataarray[1]);
+									}	
+								}
+								
+								 Iterator it = al.iterator(); 
+  
+								PrintWriter writer = new PrintWriter("bookt");
+								writer.print("");
+								writer.close();
+								
+								fw = new FileWriter("bookt",true);
+								
+								
+								while (it.hasNext()) 
+								{
+									    fw.write(it.next().toString());
+									    fw.write("\n");
+								}
+								fw.close();
+								
+							}catch(Exception emrpos)
+							{
+							}
+							
+							JFrame jfcancelled = new JFrame("Cancelled");
+							JLabel jlcancelled = new JLabel("Cancelled :)");
+							JLabel jlpnrcan = new JLabel("Passenger Name :");
+							JLabel jlpnrcancelled = new JLabel(input);
+							JLabel jlpnrnamecan = new JLabel("PNR :");
+							JLabel jlnamecancelled = new JLabel(removedpassname);
+							JButton jbcancelledexit = new JButton("Exit");
+						
+							jlcancelled.setFont(new Font("Monaco",Font.BOLD,80));
+							jlnamecancelled.setFont(new Font("Monaco",Font.BOLD,40));
+							jlpnrnamecan.setFont(new Font("Monaco",Font.BOLD,40));
+							jlpnrcancelled.setFont(new Font("Monaco",Font.BOLD,40));
+							jlpnrcan.setFont(new Font("Monaco",Font.BOLD,40));
+							jlnamecancelled.setFont(new Font("Monaco",Font.BOLD,40));
+							jbcancelledexit.setFont(new Font("Monaco",Font.BOLD,40));
+					
+							jfcancelled.setLayout(new GridLayout(4,1,5,5));
+							jfcancelled.setSize(1000,1000);
+							
+							
+							jfcancelled.add(jlcancelled);
+							JPanel jppop = new JPanel();
+							jppop.setLayout(new GridLayout(1,2,5,5));		
+							jppop.add(jlpnrnamecan);
+							jppop.add(jlpnrcancelled);
+							jfcancelled.add(jppop);
+							
+							JPanel jppiss = new JPanel();
+							jppiss.setLayout(new GridLayout(1,2,5,5));
+							jppiss.add(jlpnrcan);
+							jppiss.add(jlnamecancelled);
+							jfcancelled.add(jppiss);
+												
+							jfcancelled.add(jbcancelledexit);
+							
+							
+							
+							jfmain.setVisible(false);
+							jfpnr.setVisible(false);
+							jfdisplayinfo.setVisible(false);	
+							jfcancelled.setVisible(true);
+							
+							jbcancelledexit.addActionListener(new ActionListener() {
+								public void actionPerformed(ActionEvent e)
+								{
+									System.exit(0);
+								}
+							});
+						}
+					});
+		
+
+					jfmain.setVisible(false);
+					jfpnr.setVisible(false);
+					jfdisplayinfo.setVisible(true);
 					// cancel button
 					
 					
 				}
 			}
 		});
-
 		
 		findtrains.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
@@ -728,6 +873,69 @@ public class project extends JFrame implements ActionListener
 							{
 								// hash logic
 								jfbook.setVisible(true);
+								final String xmr = e.getActionCommand(); 
+								jbbookticket.addActionListener(new ActionListener() {
+								public void actionPerformed(ActionEvent e)
+								{
+									try
+									{
+										// pnr = date+seatid+trainid,passname
+										String datedayentered = dateday.getText();
+										String datemonthentered = datemonth.getText();
+										String dateyearentered = dateyear.getText();
+						
+										if(datedayentered.length()==1)
+										{
+											datedayentered = "0".concat(datedayentered);
+										}
+										if(datemonthentered.length()==1)
+										{
+											datemonthentered = "0".concat(datemonthentered);
+										}
+										dateyearentered = dateyearentered.valueOf(Integer.parseInt(dateyearentered)%100);
+										String datefinalformat = datedayentered+datemonthentered+dateyearentered;
+										String passnameentered = jtfpassname1.getText();
+						
+										String traininfoentered = xmr.substring(0,xmr.indexOf(" "));
+										
+										int i = 1;
+										String temppnr = "";
+										String finalpnr = "";
+										
+		System.out.println(map);
+										while(i<=99)
+										{
+											String xde = temppnr.valueOf(i);
+											if(i<10)
+											xde = "0".concat(xde);
+											
+											temppnr = datefinalformat+xde+traininfoentered;
+											
+											if(!map.containsKey(temppnr))
+											{
+												finalpnr = temppnr;
+												break;
+											}
+											i++;
+										}							
+									
+									
+										map.put(finalpnr,passnameentered);
+					
+										try
+										{							
+										fw = new FileWriter("bookt",true);
+										fw.write(finalpnr+","+passnameentered);
+										fw.write('\n');
+										fw.close();
+										}catch(Exception em)
+										{
+										}
+									}catch(Exception em)
+									{
+									}
+						       		}
+							});
 							}
 							});
 						}
@@ -770,26 +978,12 @@ public class project extends JFrame implements ActionListener
 				System.exit(0);
 			}
 		});
-		
 
 	
 		//display
 		jflogin.setVisible(true);			
 
-		jbbookticket.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e)
-			{
-				try
-				{					
-						fw = new FileWriter("bookt",true);
-						fw.write("");
-						fw.write('\n');
-						fw.close();
-				}catch(Exception em)
-				{
-				}
-			}
-		});
+		
 	
 		viewrules.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
