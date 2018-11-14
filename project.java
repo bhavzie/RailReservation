@@ -283,12 +283,6 @@ public class project extends JFrame implements ActionListener
 	static JButton jfbooked1 = new JButton("Exit");
 		
 	
-	
-	
-	// trainid trainname from to book
-	// jscrollpane
-	
-	
 	static FileWriter fw;
 	static FileReader fr;
 	
@@ -316,6 +310,8 @@ public class project extends JFrame implements ActionListener
 		}
 		return true;
 	}
+	
+	
 	
 	public static void main(String args[])
 	{
@@ -401,7 +397,7 @@ public class project extends JFrame implements ActionListener
 		jfpnr.setLayout(new GridLayout(2,1,5,5));
 		
 		//book page
-		jfbooked.setSize(1000,600);
+		jfbooked.setSize(1500,1000);
 		jfbooked.setLayout(new GridLayout(7,2,5,5));
 		jlpassname2.setFont(new Font("Monaco",Font.BOLD,40));
 		jtfpassname2.setFont(new Font("Monaco",Font.BOLD,40));
@@ -909,6 +905,9 @@ public class project extends JFrame implements ActionListener
 				boolean flag=true;
 				String frominput = jcbfrom.getSelectedItem().toString();
 				String toinput = jcbto.getSelectedItem().toString();
+				
+				jto1.setText(toinput);
+				jfrom1.setText(frominput);
 				Vector tempstring = new Vector();
 							
 				while((input=br.readLine())!=null)
@@ -954,6 +953,7 @@ public class project extends JFrame implements ActionListener
 								// hash logic
 						jfbook.setVisible(true);
 						final String xmr = e.getActionCommand(); 
+						
 						jbbookticket.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e)
 						{
@@ -977,6 +977,7 @@ public class project extends JFrame implements ActionListener
 							String passnameentered = jtfpassname1.getText();
 			
 							String traininfoentered = xmr.substring(0,xmr.indexOf(" "));
+							
 							//info1 = traininfoentered;
 							
 							int i = 1;
@@ -994,7 +995,6 @@ public class project extends JFrame implements ActionListener
 								if(!map.containsKey(temppnr))
 								{
 									finalpnr = temppnr;
-									pnrb = pnrb.concat(finalpnr);
 									break;
 								}
 								i++;
@@ -1006,7 +1006,13 @@ public class project extends JFrame implements ActionListener
 							try
 							{							
 							fw = new FileWriter("bookt",true);
-							fw.write(finalpnr+","+passnameentered);
+							fw.write(finalpnr+","+passnameentered);	
+							jtfpassname2.setText(passnameentered);
+							jpnr1.setText(finalpnr);
+							jdate1.setText(datedayentered+"/"+datemonthentered+"/"+dateyearentered);
+							jtrainname1.setText(xmr);
+							
+							
 							fw.write('\n');
 							fw.close();
 							}catch(Exception em)
@@ -1015,13 +1021,14 @@ public class project extends JFrame implements ActionListener
 						}catch(Exception em)
 						{
 						}
+							jfbooked.setVisible(true);
 			       			}
 						});
 						}
 						});
 						}
-		
-						jftrainlist.setVisible(true);	
+						
+							jftrainlist.setVisible(true);	
 					}
 				}
 				catch(Exception Le)
@@ -1029,23 +1036,6 @@ public class project extends JFrame implements ActionListener
 				}
 				}
 				
-				
-				jbbookticket.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e)
-					{
-						
-				
-						String asd = d1.concat(d2);
-						asd = asd.concat(d3);
-						String passnameentered = jtfpassname1.getText();
-						jtfpassname2.setText(passnameentered);
-						jpnr1.setText(pnrb);
-						jdate1.setText(d3);
-						jtrainname1.setText(info1);
-						//	jto1 jfrom1
-						jfbooked.setVisible(true);
-					}
-				});
 				
 				
 			}			
